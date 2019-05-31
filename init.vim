@@ -3,6 +3,7 @@
 " - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('~/.vim/plugged')
 " Initialize plugin system
+Plug 'christoomey/vim-tmux-navigator'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'janko/vim-test'
 Plug 'pbrisbin/vim-mkdir'
@@ -19,8 +20,11 @@ Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-commentary'
 Plug 'w0rp/ale'
 Plug 'skwp/greplace.vim'
+Plug 'christoomey/vim-tmux-runner'
+Plug 'wakatime/vim-wakatime'
 " Theme
 Plug 'nanotech/jellybeans.vim'
+Plug 'thoughtbot/vim-rspec'
 call plug#end()
 
 set encoding=utf-8
@@ -98,6 +102,16 @@ nnoremap <Right> :echoe "Use l"<CR>
 nnoremap <Up> :echoe "Use k"<CR>
 nnoremap <Down> :echoe "Use j"<CR>
 colorscheme jellybeans
+
+" Rspec stuff
+" RSpec.vim mappings
+map <Leader>t :call RunCurrentSpecFile()<CR>
+map <Leader>s :call RunNearestSpec()<CR>
+map <Leader>l :call RunLastSpec()<CR>
+map <Leader>a :call RunAllSpecs()<CR>
+
+let g:rspec_command = "VtrSendCommandToRunner! spring rspec {spec}"
+
 set noincsearch
 set ignorecase smartcase
 set autoindent " always set autoindenting on
@@ -141,3 +155,8 @@ command! Wq w
 " Open new split panes to right and bottom, which feels more natural
 set splitbelow
 set splitright
+" automatically rebalance windows on vim resize
+autocmd VimResized * :wincmd =
+" zoom a vim pane, <C-w>= to re-balance
+nnoremap <leader>- :wincmd _<cr>:wincmd \|<cr>
+nnoremap <leader>= :wincmd =<cr>
