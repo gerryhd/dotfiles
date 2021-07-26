@@ -1,162 +1,123 @@
-" Specify a directory for plugins
-" - For Neovim: ~/.local/share/nvim/plugged
-" - Avoid using standard Vim directory names like 'plugin'
-call plug#begin('~/.vim/plugged')
-" Initialize plugin system
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'janko/vim-test'
-Plug 'pbrisbin/vim-mkdir'
-Plug 'tpope/vim-bundler'
-Plug 'tpope/vim-endwise'
-Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-rails'
-Plug 'tpope/vim-rake'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-rhubarb'
-Plug 'tpope/vim-surround'
-Plug 'vim-ruby/vim-ruby'
-Plug 'tpope/vim-commentary'
-Plug 'w0rp/ale'
-Plug 'skwp/greplace.vim'
-Plug 'christoomey/vim-tmux-runner'
-Plug 'wakatime/vim-wakatime'
-" Theme
-Plug 'nanotech/jellybeans.vim'
-Plug 'thoughtbot/vim-rspec'
-call plug#end()
+set nocompatible              " be iMproved, required
+set number relativenumber     " show line numbers
+filetype off                  " required
 
-set encoding=utf-8
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=/usr/local/opt/fzf
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
 
-" Leader
-let mapleader = "-"
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
 
-set backspace=2   " Backspace deletes like most programs in insert mode
+" Seamless tmux and vim panes navigation
+Plugin 'christoomey/vim-tmux-navigator'
 
-" Move vim backup and temp files to a vimtmp directory in home
-set backupdir=~/vimtmp,.
-set directory=~/vimtmp,.
+" Fuzzy finder
+Plugin 'junegunn/fzf.vim'
 
-" If you don't care about Vim crashing or having backup files, prefer this
-" set nobackup
-" set nowritebackup
-" set noswapfile    " http://robots.thoughtbot.com/post/18739402579/global-gitignore#comment-458413287
-set history=50
-set ruler         " show the cursor position all the time
-set showcmd       " display incomplete commands
-set incsearch     " do incremental searching
-set laststatus=2  " Always display the status line
-set autowrite     " Automatically :write before running commands
+Plugin 'vim-ruby/vim-ruby'
+Plugin 'kana/vim-textobj-user'
+Plugin 'nelstrom/vim-textobj-rubyblock'
+
+" Color scheme
+Plugin 'tomasr/molokai'
+
+Plugin 'mileszs/ack.vim'
+
+" Waka
+Plugin 'wakatime/vim-wakatime'
+
+" Vim-commentary
+Plugin 'tpope/vim-commentary'
+
+" Emmet
+Plugin 'mattn/emmet-vim'
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+:autocmd Filetype ruby,html,yaml,javascript setl softtabstop=2
+:autocmd Filetype ruby,html,yaml,javascript setl sw=2
+:autocmd Filetype ruby,html,yaml,javascript setl ts=2
+autocmd Filetype python setl softtabstop=4
+autocmd Filetype python setl sw=4
+" Color scheme
+Plugin 'tomasr/molokai'
+
+Plugin 'mileszs/ack.vim'
+
+" Waka
+Plugin 'wakatime/vim-wakatime'
+
+" Vim-commentary
+Plugin 'tpope/vim-commentary'
+
+" Emmet
+Plugin 'mattn/emmet-vim'
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+:autocmd Filetype ruby,html,yaml,javascript setl softtabstop=2
+:autocmd Filetype ruby,html,yaml,javascript setl sw=2
+:autocmd Filetype ruby,html,yaml,javascript setl ts=2
+autocmd Filetype python setl softtabstop=4
+autocmd Filetype python setl sw=4
+autocmd Filetype python setl ts=4
+autocmd BufRead,BufNewFile *.htm,*.html setlocal tabstop=2 shiftwidth=2 softtabstop=2
 
 syntax on
+colorscheme molokai
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
 
-filetype plugin indent on
+let g:mapleader = '-'
 
-augroup myfiletypes
-  " Clear old autocmds in group
+augroup numbertoggle
   autocmd!
-  " autoindent with two spaces, always expand tabs
-  autocmd FileType ruby,eruby,yaml setlocal ai sw=2 sts=2 et
-  autocmd FileType ruby,eruby,yaml setlocal path+=lib
-  autocmd FileType ruby,eruby,yaml setlocal colorcolumn=80
-  " Make ?s part of words
-  autocmd FileType ruby,eruby,yaml setlocal iskeyword+=?
+  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
+  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
 augroup END
 
-map <C-h> :nohl<cr>
+nnoremap <C-p> :Files<Cr>
 
-" Display extra whitespace
-set list listchars=tab:»·,trail:·,nbsp:·
-" Use one space, not two, after punctuation.
-set nojoinspaces
+" I don't care about unsaved buffers until I quit vim
+set hidden
 
-" Use The Silver Searcher https://github.com/ggreer/the_silver_searcher
-if executable('ag')
-  " Use Ag over Grep
-  set grepprg=ag\ --nogroup\ --nocolor
+" Use ripgrep for searching  ️
+" Options include:
+" --vimgrep -> Needed to parse the rg response properly for ack.vim
+" --type-not sql -> Avoid huge sql file dumps as it slows down the search
+" --smart-case -> Search case insensitive if all lowercase pattern, Search case sensitively otherwise
+let g:ackprg = 'rg --vimgrep --type-not sql --smart-case -g ''!indexme'''
 
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag --literal --files-with-matches --nocolor --hidden -g "" %s'
+" Auto close the Quickfix list after pressing '<enter>' on a list item
+let g:ack_autoclose = 1
 
-  " ag is fast enough that CtrlP doesn't need to cache
-  let g:ctrlp_use_caching = 0
+" Any empty ack search will search for the work the cursor is on
+let g:ack_use_cword_for_empty_search = 1
 
-  if !exists(":Ag")
-    command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
-    nnoremap \ :Ag<SPACE>
-  endif
-endif
-" Make it obvious where 80 characters is
-set textwidth=80
-set colorcolumn=+1
+" Don't jump to first match
+cnoreabbrev Ack Ack!
 
-" Numbers
-set relativenumber
-set number
-set numberwidth=5
+" Maps <leader>/ so we're ready to type the search keyword
+nnoremap <Leader>/ :Ack!<Space>
 
-" Get off my lawn
-nnoremap <Left> :echoe "Use h"<CR>
-nnoremap <Right> :echoe "Use l"<CR>
-nnoremap <Up> :echoe "Use k"<CR>
-nnoremap <Down> :echoe "Use j"<CR>
-colorscheme jellybeans
+" Navigate quickfix list with ease
+nnoremap <silent> [q :cprevious<CR>
+nnoremap <silent> ]q :cnext<CR>
 
-" Rspec stuff
-" RSpec.vim mappings
-map <Leader>t :call RunCurrentSpecFile()<CR>
-map <Leader>s :call RunNearestSpec()<CR>
-map <Leader>l :call RunLastSpec()<CR>
-map <Leader>a :call RunAllSpecs()<CR>
-
-let g:rspec_command = "VtrSendCommandToRunner! spring rspec {spec}"
-
-set noincsearch
-set ignorecase smartcase
-set autoindent " always set autoindenting on
-" Set the tag file search order
-set tags=./tags;
-" Ignore stuff that can't be opened
-set wildignore+=tmp/**
-" Make CtrlP use ag for listing the files. Way faster and no useless files.
-let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-let g:ctrlp_use_caching = 1
-" Don't jump to a different place just because the file is already open, dingus
-let g:ctrlp_switch_buffer = 0
-" Don't wait so long for the next keypress (particularly in ambigious Leader
-" situations.
-set timeoutlen=500
-" Set gutter background to black
-highlight SignColumn ctermbg=black
-
-" Make it more obvious which paren I'm on
-hi MatchParen cterm=none ctermbg=black ctermfg=yellow
-
-" By default, vim thinks .md is Modula-2.
-autocmd BufNewFile,BufReadPost *.md set filetype=markdown
-
-" Without this, vim breaks in the middle of words when wrapping
-autocmd FileType markdown setlocal nolist wrap lbr
-
-" Wrap the quickfix window
-autocmd FileType qf setlocal wrap linebreak
-
-" Don't automatically continue comments after newline
-autocmd BufNewFile,BufRead * setlocal formatoptions-=cro
-" Make it more obviouser when lines are too long
-highlight ColorColumn ctermbg=235
-command! Q q " Bind :Q to :q
-command! Qall qall
-command! QA qall
-command! E e
-command! W w
-command! Wq w
-" Open new split panes to right and bottom, which feels more natural
-set splitbelow
-set splitright
-" automatically rebalance windows on vim resize
-autocmd VimResized * :wincmd =
-" zoom a vim pane, <C-w>= to re-balance
-nnoremap <leader>- :wincmd _<cr>:wincmd \|<cr>
-nnoremap <leader>= :wincmd =<cr>
+command W w
+command Q q
