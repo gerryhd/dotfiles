@@ -1,4 +1,4 @@
-set nocompatible              " be iMproved, required
+  set nocompatible              " be iMproved, required
 set number relativenumber     " show line numbers
 filetype off                  " required
 
@@ -22,28 +22,6 @@ Plugin 'vim-ruby/vim-ruby'
 Plugin 'kana/vim-textobj-user'
 Plugin 'nelstrom/vim-textobj-rubyblock'
 
-" Color scheme
-Plugin 'tomasr/molokai'
-
-Plugin 'mileszs/ack.vim'
-
-" Waka
-Plugin 'wakatime/vim-wakatime'
-
-" Vim-commentary
-Plugin 'tpope/vim-commentary'
-
-" Emmet
-Plugin 'mattn/emmet-vim'
-
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-:autocmd Filetype ruby,html,yaml,javascript setl softtabstop=2
-:autocmd Filetype ruby,html,yaml,javascript setl sw=2
-:autocmd Filetype ruby,html,yaml,javascript setl ts=2
-autocmd Filetype python setl softtabstop=4
-autocmd Filetype python setl sw=4
 " Color scheme
 Plugin 'tomasr/molokai'
 
@@ -96,7 +74,7 @@ nnoremap <C-p> :Files<Cr>
 " I don't care about unsaved buffers until I quit vim
 set hidden
 
-" Use ripgrep for searching  ️
+" Use ripgrep for searching ⚡️
 " Options include:
 " --vimgrep -> Needed to parse the rg response properly for ack.vim
 " --type-not sql -> Avoid huge sql file dumps as it slows down the search
